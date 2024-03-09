@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+	<meta charset="utf-8">
+	<title>Example Title</title>
+	<meta name="author" content="Your Name">
+	<meta name="description" content="Example description">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="">
+	<link rel="icon" type="image/x-icon" href=""/>
+</head>
+    
+    <style type="text/css">
+    
+        body{
+            background-color: #f3f3f3;
+            font-family: 'Arial'; margin: 0px; padding: 0px; display: flex; justify-content: center; align-items: center; height: 100vh;
+        }
+        .container{
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px; 
+            box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+            text-align: center; animation: cardAnimation 1s ease-in-out ;
+        }
+        
+        @keyframes cardAnimation{
+            0%{
+                transform: scale(0);
+                opacity: 0; 
+            }
+            100%{
+                transform: scale(1);
+                opacity: 1; 
+            }
+        }
+        
+        h1{
+            color: red; font-size: 1rem; opacity: 1; line-height: 0.5rem;  
+        }
+        .poll{ margin-top: 0.5rem; }
+        h2{ color: red; font-size: 1.5rem; line-height: 1rem; margin-bottom: 1.5rem;   }
+        .options{ display: flex; flex-direction: column; align-items: center; }
+        input[type="radio"]{ display: none; }
+        label{ display: inline-block; background-color: rgba(0,0,0,0.5); margin-bottom: 10px;  padding: 10px 20px;  border-radius: 5px; cursor: pointer; transition: background-color 0.3s; }
+        .option{ color: #000; }
+        .option:hover{ background-color: red; color: #FFF; }
+        .option input[type="radio"]:checked + label{
+            background-color: blue; color: #FFF; 
+        }
+        button{ background-color: red; color: #FFF; padding: 10px 20px; border-radius: 5px; border: none; cursor: pointer; transition: background-color 0.3s; }
+        
+        button:hover{ background-color: brown; }
+        
+        #result{ margin-top: 20px; font-size: 20px; color: #ff1493; display: flex; flex-direction: column; align-items: center; }
+        
+        .option-result{
+            display: flex; align-items: center; margin-bottom: 10px; width: 100%; 
+        }
+        
+        .option-text{
+            flex: 1; 
+        }
+        
+        .bar-container{ flex: 3; background-color: rgba(0,0,0,0.25); height: 10px; margin-left: 20px; border-radius: 5px; overflow: hidden; }
+        
+        .bar{
+            height: 100%; background-color: #000; width: 0; transition: width 0.5s ease-in-out; 
+        }
+        
+        .percentage{ width: 90px; }
+        
+    </style>
+
+<body>
+	<div class="container">
+        <h1>Poll System</h1>
+        <div class="poll">
+            <h2>What is your favorite programming language?</h2>
+            <div class="options">
+                <div class="option">
+                    <input type="radio" id="option1" name="poll" value="option1" />
+                    <label for="option1">JavaScript</label>
+                </div>
+                 <div class="option">
+                    <input type="radio" id="option2" name="poll" value="option2" />
+                    <label for="option2">Python</label>
+                </div>
+                 <div class="option">
+                    <input type="radio" id="option3" name="poll" value="option3" />
+                    <label for="option3">Java</label>
+                </div>
+                 <div class="option">
+                    <input type="radio" id="option4" name="poll" value="option4" />
+                    <label for="option4">C++</label>
+                </div>
+            </div>
+            <button onclick="submitVote(); ">Submit Vote</button>
+            <div id="result"></div>
+        </div>
+    </div>
+</body>
+
+    <script type="text/javascript">
+        
+        const options = [{id: "option1", text: "JavaScript", votes: 0},
+                         {id: "option2", text: "Python", votes: 0},
+                         {id: "option3", text: "Java", votes: 0},
+                         {id: "option4", text: "C++", votes: 0}]; 
+    
+        function submitVote(){
+            
+            const selectedOption = document.querySelector('input[name="poll"]:checked');
+            console.log(selectedOption.value);
+            
+            if(!selectedOption){
+                    alert('Please select an option');
+                    return false; 
+               }
+            
+            const optionId = selectedOption.value; 
+            
+            const selectedOptionObj = options.find((option) => option.id === optionId);
+            
+//            console.log(selectedOptionObj);
+            
+            if(selectedOptionObj){
+                
+                selectedOptionObj.votes++; 
+                console.log(selectedOptionObj);
+                displayResult();
+            }
+            
+            
+        }
+        
+        function displayResult(){
+          const result = document.getElementById('result');
+            result.innerHTML = ""; 
+            
+            options.forEach((option) => {
+                const percentage = ((option.votes/getTotalVotes()) * 100).toFixed(2) || 0;
+                const barWidth = percentage > 0 ? percentage + '%' : '0%'; 
+                
+                
+                const optionResult = document.createElement("div");
+                optionResult.className = "option-result";
+                optionResult.innerHTML = `<span class="option-text">${option.text}</span>
+                    <div class="bar-container">
+                        <div class="bar" style="width: ${barWidth};"></div>    
+                    </div>
+                    <span class="percentage">${percentage}</span>        
+                    `;
+                result.appendChild(optionResult);
+                 
+            });
+        }
+        
+        function getTotalVotes(){
+            return options.reduce((total, option) => 
+                total + option.votes, 0            
+            ); 
+        }
+        
+        console.log(getTotalVotes);
+    
+    </script>
+    
+</html>
